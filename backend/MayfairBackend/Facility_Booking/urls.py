@@ -6,6 +6,12 @@ urlpatterns = [
     path('', views.api_root, name="api-root"),
     path('facilities/', views.FacilityList.as_view(), name='facility-list'),
     path('facilities/<int:pk>/', views.FacilityDetail.as_view(), name='facility-detail'),
+    path('occupied-dates/', views.OccupiedDatesList.as_view(), name='occupied-date-list'),
+    path('occupied-dates/<int:pk>/', views.OccupiedDatesDetail.as_view(), name='occupied-date-detail'),
+    path("users/", views.UserList.as_view(), name="user-list"),
+    path("users/<int:pk>/", views.UserDetail.as_view(), name="user-detail"),
+    path("login/", views.Login.as_view(), name="login"),
+    path("register/", views.Register.as_view(), name="register")
 ]
 
 urlpatterns = format_suffix_patterns(urlpatterns)
