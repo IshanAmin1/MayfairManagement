@@ -14,19 +14,18 @@ const FacilityCard = ({ facility, selectedDateRange, onBookingSuccess }) => {
       return navigate("/auth");
     }
 
-    const baseURL = "http://127.0.0.1:8000";
-    const facilityUrl = `${baseURL}/facilities/${facilityId}/`;
-    const userUrl = `${baseURL}/users/${userId}/`;
-
-    // Extract date and time from selectedDateRange
     const { date, startTime, endTime } = selectedDateRange;
     if (!date || !startTime || !endTime) {
       console.error("Missing date or time information");
       return;
     }
 
-    // Format the date as YYYY-MM-DD
-    const formattedDate = date.toISOString().split("T")[0]; // e.g., "2025-05-03"
+    const baseURL = "http://127.0.0.1:8000";
+    const facilityUrl = `${baseURL}/facilities/${facilityId}/`;
+    const userUrl = `${baseURL}/users/${userId}/`;
+
+    // Format the date as YYYY-MM-DD from "2025-05-29T00:00:00Z"
+    const formattedDate = new Date(date).toISOString().split("T")[0]; // e.g., "2025-05-29"
 
     try {
       const response = await fetch(`${baseURL}/occupied-dates/`, {
@@ -39,8 +38,8 @@ const FacilityCard = ({ facility, selectedDateRange, onBookingSuccess }) => {
           facility: facilityUrl,
           user: userUrl,
           date: formattedDate,
-          startTime, // Include startTime
-          endTime,   // Include endTime
+          start_time: startTime,
+          end_time: endTime,
         }),
       });
 
@@ -53,6 +52,7 @@ const FacilityCard = ({ facility, selectedDateRange, onBookingSuccess }) => {
       console.log("Booking successful:", data);
     } catch (error) {
       console.error("Error during booking:", error);
+      alert("An error occurred during booking. Please try again.");
     }
   };
 

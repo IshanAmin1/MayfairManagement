@@ -21,12 +21,17 @@ const BookingComponent = ({ currentUser }) => {
   useEffect(() => {
     async function fetchFacilityData() {
       try {
-        const response = await fetch(
-          "http://127.0.0.1:8000/facilities/",
-          {
-            method: "GET",
-          }
-        );
+        const headers = {
+          "Content-Type": "application/json",
+        };
+        if (currentUser && currentUser.token) {
+          headers.Authorization = `Token ${currentUser.token}`;
+        }
+
+        const response = await fetch("http://127.0.0.1:8000/facilities/", {
+          method: "GET",
+          headers,
+        });
 
         if (!response.ok) {
           throw new Error("Failed to fetch facility data.");
@@ -37,10 +42,11 @@ const BookingComponent = ({ currentUser }) => {
         setFacilityData(data);
       } catch (error) {
         console.error("Error during fetch:", error);
+        setError("Failed to load facilities. Please try again.");
       }
     }
     fetchFacilityData();
-  }, []);
+  }, [currentUser]);
 
   const handleDateClick = (day, monthOffset = 0) => {
     const selectedDate = new Date(
@@ -54,6 +60,7 @@ const BookingComponent = ({ currentUser }) => {
       endTime: "17:00",
     });
     setError("");
+    setIsFiltered(false); // Reset filtering when date changes
   };
 
   const handleTimeChange = (e, type) => {
@@ -62,6 +69,7 @@ const BookingComponent = ({ currentUser }) => {
       [type]: e.target.value,
     });
     setError("");
+    setIsFiltered(false); // Reset filtering when time changes
   };
 
   const handleMonthChange = (increment) => {
@@ -111,57 +119,84 @@ const BookingComponent = ({ currentUser }) => {
     if (!selectedDates.date) {
       setError("Please select a date.");
       setIsFiltered(false);
+      setFilteredFacilities([]);
       return;
     }
 
     if (!selectedDates.startTime || !selectedDates.endTime) {
       setError("Please select start and end times.");
       setIsFiltered(false);
+      setFilteredFacilities([]);
       return;
     }
 
     const startDateTime = new Date(selectedDates.date);
     const [startHours, startMinutes] = selectedDates.startTime.split(":");
-    startDateTime.setHours(startHours, startMinutes);
+    startDateTime.setHours(startHours, startMinutes, 0, 0);
 
     const endDateTime = new Date(selectedDates.date);
     const [endHours, endMinutes] = selectedDates.endTime.split(":");
-    endDateTime.setHours(endHours, endMinutes);
+    endDateTime.setHours(endHours, endMinutes, 0, 0);
 
     if (endDateTime <= startDateTime) {
       setError("End time must be after start time.");
       setIsFiltered(false);
+      setFilteredFacilities([]);
       return;
     }
 
+    const formatDate = (date) => {
+      return date.toISOString().split("T")[0]; // e.g., "2025-05-29"
+    };
+
     const isTimeSlotAvailable = (occupiedDate, occupiedStartTime, occupiedEndTime) => {
+      // Convert occupied date (e.g., "2025-05-29") to a comparable format
       const occupied = new Date(occupiedDate);
       occupied.setHours(0, 0, 0, 0);
 
-      if (occupied.getTime() !== selectedDates.date.getTime()) {
+      // Convert selected date to YYYY-MM-DD for comparison
+      const selected = new Date(selectedDates.date);
+      selected.setHours(0, 0, 0, 0);
+
+      // Check if the dates match
+      if (occupied.getTime() !== selected.getTime()) {
         return true; // Different day, no conflict
       }
 
-      const occupiedStart = new Date(occupiedDate);
-      const [occStartHours, occStartMinutes] = occupiedStartTime.split(":");
-      occupiedStart.setHours(occStartHours, occStartMinutes);
+      // Parse occupied start and end times (e.g., "09:00:00" from API)
+      const occupiedStart = new Date(selectedDates.date);
+      const [occStartHours, occStartMinutes, occStartSeconds = "00"] = occupiedStartTime.split(":");
+      occupiedStart.setHours(occStartHours, occStartMinutes, occStartSeconds, 0);
 
-      const occupiedEnd = new Date(occupiedDate);
-      const [occEndHours, occEndMinutes] = occupiedEndTime.split(":");
-      occupiedEnd.setHours(occEndHours, occEndMinutes);
+      const occupiedEnd = new Date(selectedDates.date);
+      const [occEndHours, occEndMinutes, occEndSeconds = "00"] = occupiedEndTime.split(":");
+      occupiedEnd.setHours(occEndHours, occEndMinutes, occEndSeconds, 0);
 
-      return (
-        endDateTime <= occupiedStart || startDateTime >= occupiedEnd
-      );
+      // Log for debugging
+      console.log(`Checking overlap: Selected ${startDateTime} to ${endDateTime} vs Booked ${occupiedStart} to ${occupiedEnd}`);
+      const isAvailable = endDateTime <= occupiedStart || startDateTime >= occupiedEnd;
+      console.log(`Result: ${isAvailable ? "Available" : "Overlap"}`);
+      return isAvailable;
     };
 
     console.log("Facility Data:", facilityData);
-    // Assuming facility.occupiedDates includes time data like { date, startTime, endTime }
+    // Filter facilities that have no overlapping occupied dates
     const availableFacilities = facilityData.filter((facility) =>
       facility.occupiedDates.every((occ) =>
-        isTimeSlotAvailable(occ.date, occ.startTime || "00:00", occ.endTime || "23:59")
+        isTimeSlotAvailable(
+          occ.date,
+          occ.start_time || "00:00:00",
+          occ.end_time || "23:59:59"
+        )
       )
     );
+
+    if (availableFacilities.length === 0) {
+      setError("No facilities available for the selected date and time.");
+      setFilteredFacilities([]);
+      setIsFiltered(true);
+      return;
+    }
 
     setFilteredFacilities(availableFacilities);
     setIsFiltered(true);
@@ -172,7 +207,7 @@ const BookingComponent = ({ currentUser }) => {
     <div className="booking-container">
       <div className="calendar-header">
         <button className="date-switcher" onClick={() => handleMonthChange(-1)}>
-          <FaArrowLeft></FaArrowLeft>
+          <FaArrowLeft />
         </button>
         <h2>
           {currentDate.toLocaleString("default", {
@@ -181,7 +216,7 @@ const BookingComponent = ({ currentUser }) => {
           })}
         </h2>
         <button className="date-switcher" onClick={() => handleMonthChange(1)}>
-          <FaArrowRight></FaArrowRight>
+          <FaArrowRight />
         </button>
       </div>
 
@@ -221,7 +256,7 @@ const BookingComponent = ({ currentUser }) => {
       </div>
 
       <button className="book-facilities-button" onClick={handleFilterFacilities}>
-        Book Facility
+        Check Availability
       </button>
 
       {error && <div className="error-message">{error}</div>}
@@ -238,6 +273,7 @@ const BookingComponent = ({ currentUser }) => {
                 });
                 setFilteredFacilities([]);
                 setSuccess("Booking Successful!");
+                setIsFiltered(false);
                 setTimeout(() => {
                   setSuccess("");
                   setError("");
@@ -255,11 +291,11 @@ const BookingComponent = ({ currentUser }) => {
         ) : error ? (
           <p>{error}</p>
         ) : (
-          <p>Please select a date and time for booking.</p>
+          <p>Please select a date and time to check availability.</p>
         )}
       </div>
     </div>
-  );  
+  );
 };
 
 export default BookingComponent;

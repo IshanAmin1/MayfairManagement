@@ -30,7 +30,17 @@ class FacilityImage(models.Model):
 class OccupiedDate(models.Model):
     facility = models.ForeignKey(Facility, related_name="occupiedDates", on_delete=models.CASCADE)
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="booked_dates")
-    date = models.DateTimeField()
+    date = models.DateField()
+    start_time = models.TimeField()
+    end_time = models.TimeField()
+
+    class Meta:
+        constraints = [
+            models.CheckConstraint(
+                check=models.Q(end_time__gt=models.F('start_time')),
+                name='end_time_after_start_time'
+            )
+        ]
 
     def __str__(self):
         return f"{self.date} - {self.facility.name} booked by {self.user.username}"

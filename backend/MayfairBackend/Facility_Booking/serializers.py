@@ -22,7 +22,7 @@ class OccupiedDateSerializer(serializers.HyperlinkedModelSerializer):
     
     class Meta:
         model = OccupiedDate
-        fields = ['url', 'id', 'facility', 'date', 'user']
+        fields = ['url', 'id', 'facility', 'date', 'user', 'start_time', 'end_time']
 
 class FacilitySerializer(serializers.HyperlinkedModelSerializer):
     images = FacilityImageSerializer(many=True, read_only=True)
