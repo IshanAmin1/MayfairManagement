@@ -11,19 +11,25 @@ class FacilityImageSerializer(serializers.ModelSerializer):
         model = FacilityImage
         fields = ['id', 'image', 'caption', 'facility']
 
-class FacilitySerializer(serializers.HyperlinkedModelSerializer):
-    images = FacilityImageSerializer(many=True, read_only=True)
-    class Meta:
-        model = Facility
-        fields = ['url', 'id', 'name', 'type', 'description', 'maxOccupancy', 'images']
-
 class OccupiedDateSerializer(serializers.HyperlinkedModelSerializer):
     facility = serializers.HyperlinkedRelatedField(
         view_name = 'facility-detail',
-        queryset = Facility.objects.all()),
+        queryset = Facility.objects.all())
+    
+    user= serializers.HyperlinkedRelatedField(
+        view_name="user-detail",
+        queryset=User.objects.all())
+    
     class Meta:
         model = OccupiedDate
-        fields = ['url', 'id', 'facility', 'date']
+        fields = ['url', 'id', 'facility', 'date', 'user']
+
+class FacilitySerializer(serializers.HyperlinkedModelSerializer):
+    images = FacilityImageSerializer(many=True, read_only=True)
+    occupiedDates = OccupiedDateSerializer(many=True, read_only=True)
+    class Meta:
+        model = Facility
+        fields = ['url', 'id', 'name', 'type', 'description', 'maxOccupancy', 'images', 'occupiedDates']
 
 from django.contrib.auth.hashers import make_password
 class UserSerializer(serializers.HyperlinkedModelSerializer):

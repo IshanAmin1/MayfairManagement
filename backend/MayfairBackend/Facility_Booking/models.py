@@ -7,7 +7,7 @@ class Facility(models.Model):
         ('squash', 'Squash Court'),
         ('gym', 'Gym'),
         ('pool', 'Swimming Pool'),
-        ('partyroom', 'Party Room'),
+        ('partyroom', 'Party Facility'),
         ('tenniscourt', 'Tennis Court'),
         ('basketballcourt', 'Basketball Court')
     ]
@@ -28,7 +28,7 @@ class FacilityImage(models.Model):
         return f"Image for  {self.facility.name} - {self.caption or 'No Caption'}"
     
 class OccupiedDate(models.Model):
-    facility = models.ForeignKey(Facility, related_name="occupiedDateTime", on_delete=models.CASCADE)
+    facility = models.ForeignKey(Facility, related_name="occupiedDates", on_delete=models.CASCADE)
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="booked_dates")
     date = models.DateTimeField()
 

@@ -22,7 +22,7 @@ class Migration(migrations.Migration):
             fields=[
                 ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('name', models.CharField(blank=True, default='', max_length=100)),
-                ('type', models.CharField(choices=[('squash', 'Squash Court'), ('gym', 'Gym'), ('pool', 'Swimming Pool'), ('partyroom', 'Party Room'), ('tenniscourt', 'Tennis Court'), ('basketballcourt', 'Basketball Court')], max_length=100)),
+                ('type', models.CharField(choices=[('squash', 'Squash Court'), ('gym', 'Gym'), ('pool', 'Swimming Pool'), ('partyroom', 'Party Facility'), ('tenniscourt', 'Tennis Court'), ('basketballcourt', 'Basketball Court')], max_length=100)),
                 ('description', models.TextField(max_length=1000)),
                 ('maxOccupancy', models.IntegerField(default=10)),
             ],
