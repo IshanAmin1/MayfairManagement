@@ -7,8 +7,12 @@ import { UserProvider } from './components/UserContext.jsx';
 import GuestRoute from './components/GuestRoute.jsx';
 import AuthForm from './components/AuthForm.jsx';
 import BookingComponent from './components/BookingComponent.jsx';
+import AllFacilities from './components/AllFacilities.jsx';
+import OccupiedDatesDisplay from './components/OccupiedDatesDisplay.jsx';
 
 const router = createBrowserRouter([
+
+
     {
         path: "/",
         element: <App> </App>,
@@ -20,8 +24,15 @@ const router = createBrowserRouter([
           {
             path: "/auth",
             element: <GuestRoute><AuthForm></AuthForm></GuestRoute>
-          }
-          
+          },
+          {
+            path: "/all-facilities",
+            element: <AllFacilities></AllFacilities>
+          },
+          {
+            path: "/my-bookings",
+            element: <OccupiedDatesDisplay></OccupiedDatesDisplay>
+          },
         ]
     },
 ]);
