@@ -157,7 +157,6 @@ const BookingComponent = ({ currentUser }) => {
       // Convert selected date to YYYY-MM-DD for comparison
       const selected = new Date(selectedDates.date);
       selected.setHours(0, 0, 0, 0);
-
       // Check if the dates match
       if (occupied.getTime() !== selected.getTime()) {
         return true; // Different day, no conflict
@@ -198,6 +197,8 @@ const BookingComponent = ({ currentUser }) => {
       return;
     }
 
+    console.log(availableFacilities)
+    
     setFilteredFacilities(availableFacilities);
     setIsFiltered(true);
     setError("");
@@ -205,67 +206,66 @@ const BookingComponent = ({ currentUser }) => {
 
   return (
     <div className="booking-container">
-      <div className="booking-content">
-        {/* Left Side - Calendar & Time Selection */}
-        <div className="calendar-section">
-          <div className="calendar-header">
-            <button className="date-switcher" onClick={() => handleMonthChange(-1)}>
-              <FaArrowLeft />
+        {!isFiltered && (
+          <div className="calendar-section">
+            <div className="calendar-header">
+              <button className="date-switcher" onClick={() => handleMonthChange(-1)}>
+                <FaArrowLeft />
+              </button>
+              <h2>
+                {currentDate.toLocaleString("default", {
+                  month: "long",
+                  year: "numeric",
+                })}
+              </h2>
+              <button className="date-switcher" onClick={() => handleMonthChange(1)}>
+                <FaArrowRight />
+              </button>
+            </div>
+
+            <div className="calendar-days">
+              {days.map(({ day, monthOffset }, index) => (
+                <div
+                  key={index}
+                  className={`calendar-day ${
+                    isDateSelected(day, monthOffset) ? "selected" : ""
+                  } ${monthOffset !== 0 ? "overflow" : ""}`}
+                  onClick={() => handleDateClick(day, monthOffset)}
+                >
+                  {day}
+                </div>
+              ))}
+            </div>
+
+            <div className="time-selection">
+              <label>
+                Start Time:
+                <input
+                  type="time"
+                  value={selectedDates.startTime}
+                  onChange={(e) => handleTimeChange(e, "startTime")}
+                  required
+                />
+              </label>
+              <label>
+                End Time:
+                <input
+                  type="time"
+                  value={selectedDates.endTime}
+                  onChange={(e) => handleTimeChange(e, "endTime")}
+                  required
+                />
+              </label>
+            </div>
+
+            <button className="book-facilities-button" onClick={handleFilterFacilities}>
+              Check Availability
             </button>
-            <h2>
-              {currentDate.toLocaleString("default", {
-                month: "long",
-                year: "numeric",
-              })}
-            </h2>
-            <button className="date-switcher" onClick={() => handleMonthChange(1)}>
-              <FaArrowRight />
-            </button>
+
+            {error && <div className="error-message">{error}</div>}
           </div>
+        )}
   
-          <div className="calendar-days">
-            {days.map(({ day, monthOffset }, index) => (
-              <div
-                key={index}
-                className={`calendar-day ${
-                  isDateSelected(day, monthOffset) ? "selected" : ""
-                } ${monthOffset !== 0 ? "overflow" : ""}`}
-                onClick={() => handleDateClick(day, monthOffset)}
-              >
-                {day}
-              </div>
-            ))}
-          </div>
-  
-          <div className="time-selection">
-            <label>
-              Start Time:
-              <input
-                type="time"
-                value={selectedDates.startTime}
-                onChange={(e) => handleTimeChange(e, "startTime")}
-                required
-              />
-            </label>
-            <label>
-              End Time:
-              <input
-                type="time"
-                value={selectedDates.endTime}
-                onChange={(e) => handleTimeChange(e, "endTime")}
-                required
-              />
-            </label>
-          </div>
-  
-          <button className="book-facilities-button" onClick={handleFilterFacilities}>
-            Check Availability
-          </button>
-  
-          {error && <div className="error-message">{error}</div>}
-        </div>
-  
-        {/* Right Side - Filtered Facilities */}
         <div className="filtered-facilities">
           {filteredFacilities.length > 0 ? (
             filteredFacilities.map((facility) => (
@@ -289,16 +289,18 @@ const BookingComponent = ({ currentUser }) => {
                 selectedDateRange={selectedDates}
               />
             ))
-          ) : isFiltered && selectedDates.date ? (
-            <p>No available facility for the selected date and time.</p>
-          ) : success ? (
-            <p>{success}</p>
-          ) : error ? (
-            <p>{error}</p>
-          ) : (
-            <p>Please select a date and time to check availability.</p>
-          )}
+          ) : null}
         </div>
+
+      <div className="availability-message">
+      {!isFiltered && !selectedDates.date && !filteredFacilities.length && (
+        <p>Please select a date and time to check availability.</p>
+      )}
+      {isFiltered && selectedDates.date && filteredFacilities.length === 0 && (
+        <p>No available facility for the selected date and time.</p>
+      )}
+      {success && <p>{success}</p>}
+      {error && <p>{error}</p>}
       </div>
     </div>
   );

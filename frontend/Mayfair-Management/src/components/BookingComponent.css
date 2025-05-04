@@ -12,28 +12,20 @@
   opacity: 1;
 }
 
-.booking-content {
-  display: flex;
-  gap: 300px;
-  align-items: flex-start;
-}
-
-/* Calendar section on the left */
 .calendar-section {
-  flex: 1;
+  flex: 1 1 300px; /* Ensure the calendar section is flexible, with a base width of 300px */
   padding: 1rem;
   background: rgba(255, 255, 255, 0.05);
   border-radius: 12px;
+  max-width: 500px; /* Restrict the calendar section to a max width */
 }
-
-/* Facility cards on the right */
 .filtered-facilities {
-  flex: 2;
-  display: flex;
+  flex: 1;
+  display: grid;
   flex-direction: column;
-  gap: 20px;
-  transform: translateX(20px);
   transition: opacity 0.5s ease, transform 0.5s ease;
+  grid-template-columns: repeat(3, 1fr); /* Creates 3 equal columns */
+  gap: 50px; 
 }
 
 /* Calendar styling */

@@ -1,79 +1,110 @@
 .occupied-dates-container {
-  max-width: 1400px; /* Increase the width */
-  margin: 30px auto;
-  padding: 25px;
-  background-color: #faf3e0; /* Softer light beige */
+  max-width: 1800px;
+  margin: 1.5rem auto;
+  padding: 1.5rem;
   border-radius: 12px;
-  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15); /* Softer shadow */
-  font-family: 'Arial', sans-serif;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 1rem;
+  background: rgba(255, 255, 255, 0.1);
+  border: 2px solid rgba(255, 255, 255, 0.2);
+  backdrop-filter: blur(20px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+  border-radius: 16px;
 }
 
 .month-section {
-  margin-bottom: 25px;
+  background: rgba(255, 255, 255, 0.1);
+  border: 2px solid rgba(255, 255, 255, 0.2);
+  backdrop-filter: blur(20px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+  border-radius: 16px;
+  background-color: rgba(255, 255, 255, 0.03);
+  border-radius: 10px;
+  padding: 1rem;
+  border: 1px solid rgba(255, 255, 255, 0.08);
 }
 
 .month-title {
-  font-size: 1.8rem;
-  color: #333; /* Darker text for readability */
-  border-bottom: 3px solid #4da8ff; /* Soft coral line */
-  padding-bottom: 10px;
-  margin-bottom: 15px;
-  font-weight: 600;
-  text-transform: uppercase; /* Make the month titles stand out */
+  font-size: 1.25rem;
+  color: #111827;
+  padding-bottom: 0.5rem;
+  margin-bottom: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  border-bottom: 1px solid rgba(59, 130, 246, 0.2);
 }
 
 .date-cards {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); /* Wider columns with more space */
-  gap: 25px; /* Slightly increased gap between items */
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 0.75rem;
 }
 
 .date-card {
-  background: linear-gradient(135deg, #ffecb3, #4da8ff); /* Soft gradient with warm tones */
-  color: #4e3b31; /* Rich brown for text */
-  padding: 20px;
-  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.1);
+  border: 2px solid rgba(255, 255, 255, 0.2);
+  backdrop-filter: blur(20px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+  border-radius: 16px;
+  background-color: rgba(255, 255, 255, 0.05);
+  color: #111827;
+  padding: 0.75rem;
+  border-radius: 8px;
   text-align: center;
-  font-size: 1rem;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-  transition: transform 0.3s ease, box-shadow 0.3s ease, background 0.3s ease;
+  font-size: 0.9rem;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
   cursor: pointer;
 }
 
 .date-card:hover {
-  transform: scale(1.05);
-  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15);
-  background: linear-gradient(135deg, #52ace9, #4da8ff); /* Warm orange gradient */
+  transform: translateY(-2px);
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
 }
 
 .date-range {
-  font-weight: 600;
-  font-size: 1.2rem;
-  color: #2c3e50; /* Dark gray for text */
+  font-weight: 500;
+  font-size: 0.95rem;
+  color: #111827;
 }
 
 .date-range span {
   display: block;
-  margin-top: 5px;
-  font-size: 1rem;
-  color: #7f8c8d; /* Lighter gray for the date range */
+  margin-top: 0.2rem;
+  font-size: 0.85rem;
+  color: #6b7280;
 }
 
-@media (max-width: 768px) {
+@media (max-width: 1024px) {
   .occupied-dates-container {
-    padding: 15px;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    padding: 1rem;
   }
-  
+
   .month-title {
-    font-size: 1.4rem;
+    font-size: 1.2rem;
   }
-  
+
   .date-card {
-    font-size: 0.95rem;
-    padding: 18px;
+    padding: 0.6rem;
+    font-size: 0.85rem;
   }
-  
-  .date-range {
-    font-size: 1rem;
+}
+
+@media (max-width: 640px) {
+  .occupied-dates-container {
+    grid-template-columns: 1fr;
+    gap: 0.75rem;
+  }
+
+  .month-title {
+    font-size: 1.15rem;
+  }
+
+  .date-cards {
+    grid-template-columns: 1fr;
   }
 }

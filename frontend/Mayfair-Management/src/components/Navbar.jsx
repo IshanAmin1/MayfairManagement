@@ -12,7 +12,7 @@ const Navbar = () => {
   function handleLogout() {
     localStorage.removeItem("user");
     setUser(null);
-    navigate("/");
+    navigate("/auth");
   }
 
   return (
@@ -40,9 +40,9 @@ const Navbar = () => {
             <Link to="auth">Login</Link>
           </li>
         ) : (
-          <li className="logout" onClick={handleLogout}>
-            Logout
-          </li>
+          <li>
+          <Link to="#" onClick={handleLogout}>Logout</Link>
+        </li>
         )}
       </ul>
     </nav>

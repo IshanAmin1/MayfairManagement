@@ -2,6 +2,7 @@ import React from "react";
 import "./AllFacilities.css";
 import FacilityCard from "./FacilityDetails/FacilityCard";
 import { useState, useEffect } from "react";
+
 const AllFacilities = () => {
   const [facilityData, setFacilityData] = useState([]);
 
@@ -28,10 +29,10 @@ const AllFacilities = () => {
     }
     fetchFacilityData();
   }, []);
+
   return (
     <div className="all-facilities-container">
-      <h2>All Facilities</h2>
-      <div className="facilities-list">
+      <div className="facilities-grid">
         {facilityData.map((facility) => (
           <FacilityCard key={facility.id} facility={facility} />
         ))}
