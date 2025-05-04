@@ -1,124 +1,221 @@
 .booking-container {
-    max-width: 400px;
-    margin: 0 auto;
-    text-align: center;
-    font-family: Arial, sans-serif;
+  width: 100%;
+  max-width: 1400px; /* Increase max width */
+  margin: 0 auto;     /* Center it horizontally */
+  padding: 40px;      /* Add inner spacing */
+  background: rgba(255, 255, 255, 0.1);
+  border: 2px solid rgba(255, 255, 255, 0.2);
+  backdrop-filter: blur(10px);
+  border-radius: 12px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+  transition: transform 0.3s ease, opacity 0.3s ease;
+  opacity: 1;
+}
+
+.booking-content {
+  display: flex;
+  gap: 300px;
+  align-items: flex-start;
+}
+
+/* Calendar section on the left */
+.calendar-section {
+  flex: 1;
+  padding: 1rem;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 12px;
+}
+
+/* Facility cards on the right */
+.filtered-facilities {
+  flex: 2;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  transform: translateX(20px);
+  transition: opacity 0.5s ease, transform 0.5s ease;
+}
+
+/* Calendar styling */
+.calendar-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.5rem;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 8px;
+}
+
+
+.calendar-header h2 {
+  font-size: 1.5rem;
+  font-weight: 600;
+  margin: 0;
+  color: #ffffff;
+}
+
+.calendar-header button {
+  background: linear-gradient(90deg, #4da8ff, #007bff);
+  border: none;
+  padding: 0.5rem 1rem;
+  cursor: pointer;
+  border-radius: 6px;
+  color: #ffffff;
+  font-weight: 500;
+  transition: transform 0.2s ease, background 0.3s ease;
+}
+.calendar-header button:hover {
+  background: linear-gradient(90deg, #80c0ff, #4da8ff);
+  transform: translateY(-2px);
+}
+
+.calendar-days {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 8px;
+  margin-top: 1rem;
+}
+
+.calendar-day {
+  padding: 0.8rem;
+  background: #2b3637;
+  color: #ffffff;
+  cursor: pointer;
+  text-align: center;
+  border-radius: 8px;
+  transition: background 0.3s ease, transform 0.2s ease;
+}
+
+.calendar-day:hover {
+  background: #3a4647;
+  transform: scale(1.05);
+}
+
+.calendar-day.selected {
+  background: linear-gradient(90deg, #4da8ff, #007bff);
+  color: #ffffff;
+}
+
+.calendar-day.overflow {
+  color: #a0a0a0;
+  background: #1a2223;
+}
+
+.calendar-day.overflow.selected {
+  background: rgba(77, 168, 255, 0.7);
+}
+
+.time-selection {
+  margin-top: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.time-selection label {
+  display: flex;
+  flex-direction: column;
+  font-size: 1.2rem;
+  color: #2b3637;
+}
+
+.time-selection input {
+  margin-top: 0.5rem;
+  padding: 0.8rem;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.05);
+  color: #ffffff;
+  font-size: 1.5rem;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.time-selection input:focus {
+  border-color: #4da8ff;
+  box-shadow: 0 0 8px rgba(77, 168, 255, 0.3);
+  outline: none;
+}
+
+.book-facilities-button {
+  margin-top: 1.5rem;
+  padding: 1rem;
+  background: linear-gradient(90deg, #2831a7, #1e7e34);
+  border: none;
+  color: #ffffff;
+  cursor: pointer;
+  border-radius: 8px;
+  width: 100%;
+  font-size: 1.1rem;
+  font-weight: 500;
+  transition: background 0.3s ease, transform 0.2s ease;
+}
+
+.book-facilities-button:hover {
+  background: linear-gradient(90deg, #34c759, #28a745);
+  transform: translateY(-2px);
+}
+
+.book-facilities-button:disabled {
+  background: #666;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.error-message {
+  margin-top: 1rem;
+  color: #ff4d4d;
+  background: rgba(255, 235, 235, 0.9);
+  padding: 0.8rem;
+  border-radius: 8px;
+  text-align: center;
+  font-size: 0.9rem;
+}
+
+@media (max-width: 768px) {
+  .booking-container {
+      padding: 1.5rem;
   }
-  
-  .calendar-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 10px;
+
+  .booking-content {
+      flex-direction: column;
+      gap: 1.5rem;
   }
-  
+
+  .calendar-section {
+      max-width: 100%;
+  }
+
+  .filtered-facilities {
+      margin-top: 1.5rem;
+  }
+
   .calendar-header h2 {
-    font-size: 1.2em;
-    margin: 0;
+      font-size: 1.3rem;
   }
-  
-  .calendar-header button {
-    background: #f8b996;
-    border: none;
-    padding: 5px 10px;
-    cursor: pointer;
-  }
-  
-  .calendar-days {
-    display: grid;
-    grid-template-columns: repeat(7, 1fr);
-    gap: 5px;
-  }
-  
+
   .calendar-day {
-    background: #2b3637;
-    color: white;
-    padding: 10px;
-    cursor: pointer;
-    border-radius: 5px;
+      padding: 0.6rem;
+      font-size: 0.9rem;
   }
-  
-  .calendar-day.selected {
-    background: #f8b996;
-  }
-  
-  .calendar-day.overflow {
-    color: #777;
-    background: #1a2223;
-    cursor: pointer;
-  }
-  
-  .calendar-day.overflow.selected {
-    background: #f8b996aa;
-  }
-  
+
   .book-facilities-button {
-    margin-top: 15px;
-    background: #101a1b;
-    color: #f8b996;
-    border: none;
-    padding: 10px;
-    cursor: pointer;
-    width: 100%;
-    font-size: 1em;
-    border-radius: 5px;
-    transition: 0.1s ease-in-out;
+      font-size: 1rem;
+      padding: 0.8rem;
   }
-  .book-facilities-button:hover {
-    background-color: #f8b996;
-    color: #101a1b;
+}
+
+@media (max-width: 480px) {
+  .booking-container {
+      margin: 1rem;
+      padding: 1rem;
   }
-  
-  .error-message {
-    color: #ff4d4d;
-    background-color: #ffebeb;
-    padding: 10px;
-    border-radius: 4px;
-    margin-top: 10px;
-    text-align: center;
+
+  .calendar-header {
+      flex-direction: column;
+      gap: 0.5rem;
   }
-  .book-facility-button {
-    display: inline-block;
-    padding: 0.8rem 1.5rem;
-    font-size: 1.2rem;
-    font-weight: bold;
-    color: #fff;
-    background-color: #007bff;
-    border: none;
-    border-radius: 8px;
-    cursor: pointer;
-    text-align: center;
-    transition: background-color 0.3s, transform 0.2s;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    margin: 1rem auto;
+
+  .time-selection input {
+      font-size: 0.9rem;
   }
-  
-  .book-facility-button:hover {
-    background-color: #0056b3;
-    transform: translateY(-2px);
-  }
-  
-  .book-facility-button:active {
-    background-color: #003f8a;
-    transform: translateY(1px);
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-  }
-  
-  .book-facility-button:disabled {
-    background-color: #cccccc;
-    cursor: not-allowed;
-  }
-  
-  .book-facility-button:focus {
-    outline: 2px solid #0056b3;
-    outline-offset: 2px;
-  }
-  .date-switcher {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    border-radius: 5px;
-  }
-  .date-switcher:hover {
-    background-color: #f8b896b6;
-  }
+}

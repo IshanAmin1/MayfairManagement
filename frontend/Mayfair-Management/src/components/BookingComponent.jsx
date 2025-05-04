@@ -205,94 +205,100 @@ const BookingComponent = ({ currentUser }) => {
 
   return (
     <div className="booking-container">
-      <div className="calendar-header">
-        <button className="date-switcher" onClick={() => handleMonthChange(-1)}>
-          <FaArrowLeft />
-        </button>
-        <h2>
-          {currentDate.toLocaleString("default", {
-            month: "long",
-            year: "numeric",
-          })}
-        </h2>
-        <button className="date-switcher" onClick={() => handleMonthChange(1)}>
-          <FaArrowRight />
-        </button>
-      </div>
-
-      <div className="calendar-days">
-        {days.map(({ day, monthOffset }, index) => (
-          <div
-            key={index}
-            className={`calendar-day ${
-              isDateSelected(day, monthOffset) ? "selected" : ""
-            } ${monthOffset !== 0 ? "overflow" : ""}`}
-            onClick={() => handleDateClick(day, monthOffset)}
-          >
-            {day}
+      <div className="booking-content">
+        {/* Left Side - Calendar & Time Selection */}
+        <div className="calendar-section">
+          <div className="calendar-header">
+            <button className="date-switcher" onClick={() => handleMonthChange(-1)}>
+              <FaArrowLeft />
+            </button>
+            <h2>
+              {currentDate.toLocaleString("default", {
+                month: "long",
+                year: "numeric",
+              })}
+            </h2>
+            <button className="date-switcher" onClick={() => handleMonthChange(1)}>
+              <FaArrowRight />
+            </button>
           </div>
-        ))}
-      </div>
-
-      <div className="time-selection">
-        <label>
-          Start Time:
-          <input
-            type="time"
-            value={selectedDates.startTime}
-            onChange={(e) => handleTimeChange(e, "startTime")}
-            required
-          />
-        </label>
-        <label>
-          End Time:
-          <input
-            type="time"
-            value={selectedDates.endTime}
-            onChange={(e) => handleTimeChange(e, "endTime")}
-            required
-          />
-        </label>
-      </div>
-
-      <button className="book-facilities-button" onClick={handleFilterFacilities}>
-        Check Availability
-      </button>
-
-      {error && <div className="error-message">{error}</div>}
-
-      <div className="filtered-facilities">
-        {filteredFacilities.length > 0 ? (
-          filteredFacilities.map((facility) => (
-            <FacilityCard
-              onBookingSuccess={() => {
-                setSelectedDates({
-                  date: null,
-                  startTime: "09:00",
-                  endTime: "17:00",
-                });
-                setFilteredFacilities([]);
-                setSuccess("Booking Successful!");
-                setIsFiltered(false);
-                setTimeout(() => {
-                  setSuccess("");
-                  setError("");
-                }, 5000);
-              }}
-              key={facility.id}
-              facility={facility}
-              selectedDateRange={selectedDates}
-            />
-          ))
-        ) : isFiltered && selectedDates.date ? (
-          <p>No available facility for the selected date and time.</p>
-        ) : success ? (
-          <p>{success}</p>
-        ) : error ? (
-          <p>{error}</p>
-        ) : (
-          <p>Please select a date and time to check availability.</p>
-        )}
+  
+          <div className="calendar-days">
+            {days.map(({ day, monthOffset }, index) => (
+              <div
+                key={index}
+                className={`calendar-day ${
+                  isDateSelected(day, monthOffset) ? "selected" : ""
+                } ${monthOffset !== 0 ? "overflow" : ""}`}
+                onClick={() => handleDateClick(day, monthOffset)}
+              >
+                {day}
+              </div>
+            ))}
+          </div>
+  
+          <div className="time-selection">
+            <label>
+              Start Time:
+              <input
+                type="time"
+                value={selectedDates.startTime}
+                onChange={(e) => handleTimeChange(e, "startTime")}
+                required
+              />
+            </label>
+            <label>
+              End Time:
+              <input
+                type="time"
+                value={selectedDates.endTime}
+                onChange={(e) => handleTimeChange(e, "endTime")}
+                required
+              />
+            </label>
+          </div>
+  
+          <button className="book-facilities-button" onClick={handleFilterFacilities}>
+            Check Availability
+          </button>
+  
+          {error && <div className="error-message">{error}</div>}
+        </div>
+  
+        {/* Right Side - Filtered Facilities */}
+        <div className="filtered-facilities">
+          {filteredFacilities.length > 0 ? (
+            filteredFacilities.map((facility) => (
+              <FacilityCard
+                onBookingSuccess={() => {
+                  setSelectedDates({
+                    date: null,
+                    startTime: "09:00",
+                    endTime: "17:00",
+                  });
+                  setFilteredFacilities([]);
+                  setSuccess("Booking Successful!");
+                  setIsFiltered(false);
+                  setTimeout(() => {
+                    setSuccess("");
+                    setError("");
+                  }, 5000);
+                }}
+                key={facility.id}
+                facility={facility}
+                selectedDateRange={selectedDates}
+              />
+            ))
+          ) : isFiltered && selectedDates.date ? (
+            <p>No available facility for the selected date and time.</p>
+          ) : success ? (
+            <p>{success}</p>
+          ) : error ? (
+            <p>{error}</p>
+          ) : (
+            <p>Please select a date and time to check availability.</p>
+          )}
+        </div>
       </div>
     </div>
   );

@@ -20,7 +20,7 @@ const Navbar = () => {
       <h1>Mayfair Management</h1>
       <ul>
         <li>
-          <Link to="">Home</Link>
+          <Link to="">Homepage</Link>
         </li>
         <li>
           <Link to="all-facilities">All Facilities</Link>
@@ -28,6 +28,11 @@ const Navbar = () => {
         {user == null ? null : (
           <li>
             <Link to="my-bookings">My Bookings</Link>
+          </li>
+        )}
+        {user == null ? null : (
+          <li>
+            <Link to="book-facility">Book Facility</Link>
           </li>
         )}
         {user == null ? (

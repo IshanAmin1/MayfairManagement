@@ -1,38 +1,73 @@
-.navbar {
+body {
+    margin-top: 3rem; /* Adjusted to match the smaller navbar height */
+  }
+  
+  .navbar {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    background-color: #333;
-    padding: 1rem;
-    color: #f8f8f8;
-    margin-bottom: 3rem;
+    background: linear-gradient(90deg, rgba(60, 60, 60, 0.7), rgba(40, 40, 40, 0.7)); /* Gray tones */
+    backdrop-filter: blur(10px);
+    padding: 0.8rem 2rem; /* Reduced the vertical padding for a smaller height */
+    color: #ffffff;
     width: 100%;
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 1000;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    transition: background 0.3s ease;
   }
   
   .navbar h1 {
     margin: 0;
+    font-size: 1.8rem;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    transition: transform 0.3s ease;
+  }
+  
+  .navbar h1:hover {
+    transform: scale(1.05);
   }
   
   .navbar ul {
     margin: 0;
     padding: 0;
-  }
-  .navbar ul {
     list-style: none;
     display: flex;
-    gap: 1rem;
+    gap: 1.5rem;
   }
   
   .navbar ul li a {
-    color: #f8f8f8;
+    color: #ffffff;
     text-decoration: none;
+    font-size: 1.1rem;
+    font-weight: 500;
+    padding: 0.5rem 1rem;
+    border-radius: 8px;
+    transition: color 0.3s ease, background 0.3s ease, transform 0.2s ease;
   }
   
   .navbar ul li a:hover {
-    text-decoration: underline;
+    color: #4da8ff;
+    background: rgba(255, 255, 255, 0.1);
+    transform: translateY(-2px);
   }
   
-  .logout:hover {
-    text-decoration: underline;
-    cursor: pointer;
+  .navbar ul li a:focus {
+    outline: 2px solid #4da8ff;
+    outline-offset: 2px;
   }
+  
+  .navbar ul li a.active {
+    color: #4da8ff;
+    background: rgba(77, 168, 255, 0.2);
+  }
+  
+  .logout {
+    color: #ffffff;
+    font-size: 1.1rem;
+    font-weight: 500;
+  }
+  

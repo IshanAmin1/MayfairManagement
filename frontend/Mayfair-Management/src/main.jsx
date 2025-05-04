@@ -17,10 +17,7 @@ const router = createBrowserRouter([
         path: "/",
         element: <App> </App>,
         children: [
-          {
-            path: "/",
-            element: <BookingComponent></BookingComponent>,
-          },
+          
           {
             path: "/auth",
             element: <GuestRoute><AuthForm></AuthForm></GuestRoute>
@@ -32,6 +29,10 @@ const router = createBrowserRouter([
           {
             path: "/my-bookings",
             element: <OccupiedDatesDisplay></OccupiedDatesDisplay>
+          },
+          {
+            path: "/book-facility",
+            element: <BookingComponent></BookingComponent>
           },
         ]
     },

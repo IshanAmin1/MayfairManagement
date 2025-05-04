@@ -40,7 +40,7 @@ const AuthForm = () => {
             email: userData.email,
             password: userData.password,
             username: userData.email,
-          }), // Payload
+          }), 
         }
       );
 
@@ -107,43 +107,45 @@ const AuthForm = () => {
     setFormData({ email: "", password: "", name: "" }); // Clear form data when switching
   };
   return (
-    <div className="auth-form-container">
-      <form className="auth-form" onSubmit={handleSubmit}>
-        <h2>{isLogin ? "Login to Your Account" : "Create an Account"}</h2>
-        {!isLogin && (
+    <div className="auth-page">
+      <div className="auth-form-container">
+        <form className="auth-form" onSubmit={handleSubmit}>
+          <h2>{isLogin ? "Login" : "Create an Account"}</h2>
+          {!isLogin && (
+            <input
+              type="text"
+              name="name"
+              placeholder="Name"
+              value={formData.name}
+              onChange={handleChange}
+              required
+            />
+          )}
           <input
-            type="text"
-            name="name"
-            placeholder="Name"
-            value={formData.name}
+            type="email"
+            name="email"
+            placeholder="Email"
+            value={formData.email}
             onChange={handleChange}
             required
           />
-        )}
-        <input
-          type="email"
-          name="email"
-          placeholder="Email"
-          value={formData.email}
-          onChange={handleChange}
-          required
-        />
-        <input
-          type="password"
-          name="password"
-          placeholder="Password"
-          value={formData.password}
-          onChange={handleChange}
-          required
-        />
-        <button type="submit">{isLogin ? "Log In" : "Sign Up"}</button>
-      </form>
-      <p>
-        {isLogin ? "Don't have an account?" : "Already have an account?"}{" "}
-        <button className="switcher" onClick={toggleAuthMode}>
-          {isLogin ? "Sign Up" : "Login"}
-        </button>
-      </p>
+          <input
+            type="password"
+            name="password"
+            placeholder="Password"
+            value={formData.password}
+            onChange={handleChange}
+            required
+          />
+          <button type="submit">{isLogin ? "Log In" : "Sign Up"}</button>
+        </form>
+        <p>
+          {isLogin ? "Don't have an account?" : "Already have an account?"}{" "}
+          <button className="switcher" onClick={toggleAuthMode}>
+            {isLogin ? "Register" : "Login"}
+          </button>
+        </p>
+      </div>
     </div>
   );
 };
