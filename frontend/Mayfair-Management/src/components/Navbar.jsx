@@ -20,9 +20,6 @@ const Navbar = () => {
       <h1>Mayfair Management</h1>
       <ul>
         <li>
-          <Link to="">Homepage</Link>
-        </li>
-        <li>
           <Link to="all-facilities">All Facilities</Link>
         </li>
         {user == null ? null : (

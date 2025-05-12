@@ -149,31 +149,35 @@ const OccupiedDatesDisplay = () => {
 
   return (
     <div className="occupied-dates-container">
-      {Object.keys(groupedDates).map((month) => (
-        <div key={month} className="month-section">
-          <h2 className="month-title">{month}</h2>
-          <div className="date-cards">
-            {groupedDates[month].map((range, index) => (
-              <div key={index} className="date-card">
-                <p className="facility-name">{range.facilityName}</p>
-                <p className="date-range">
-                  {new Date(`${range.startDate}T${range.startTime}`).toLocaleString("en-US", {
-                    day: "numeric",
-                    month: "short",
-                    year: "numeric",
-                    hour: "2-digit",
-                    minute: "2-digit",
-                  })} -{" "}
-                  {new Date(`${range.endDate}T${range.endTime}`).toLocaleString("en-US", {
-                    hour: "2-digit",
-                    minute: "2-digit",
-                  })}
-                </p>
-              </div>
-            ))}
+      {Object.keys(groupedDates).length === 0 ? (
+        <p className="no-bookings">You have no bookings</p>
+      ) : (
+        Object.keys(groupedDates).map((month) => (
+          <div key={month} className="month-section">
+            <h2 className="month-title">{month}</h2>
+            <div className="date-cards">
+              {groupedDates[month].map((range, index) => (
+                <div key={index} className="date-card">
+                  <p className="facility-name">{range.facilityName}</p>
+                  <p className="date-range">
+                    {new Date(`${range.startDate}T${range.startTime}`).toLocaleString("en-US", {
+                      day: "numeric",
+                      month: "short",
+                      year: "numeric",
+                      hour: "2-digit",
+                      minute: "2-digit",
+                    })} -{" "}
+                    {new Date(`${range.endDate}T${range.endTime}`).toLocaleString("en-US", {
+                      hour: "2-digit",
+                      minute: "2-digit",
+                    })}
+                  </p>
+                </div>
+              ))}
+            </div>
           </div>
-        </div>
-      ))}
+        ))
+      )}
     </div>
   );
 };
