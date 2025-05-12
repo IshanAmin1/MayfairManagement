@@ -13,6 +13,7 @@ const OccupiedDatesDisplay = () => {
     }
 
     const baseURL = "http://127.0.0.1:8000";
+
     async function fetchDates() {
       try {
         const response = await fetch(`${baseURL}/occupied-dates/`, {
@@ -26,7 +27,6 @@ const OccupiedDatesDisplay = () => {
         if (!response.ok) {
           throw new Error("Fetch failed");
         }
-        console.log(user.token);
         const data = await response.json();
         console.log(data);
         return data;
@@ -36,13 +36,41 @@ const OccupiedDatesDisplay = () => {
       }
     }
 
+    async function fetchFacilityName(facilityUrl) {
+      try {
+        const response = await fetch(facilityUrl, {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Token ${user.token}`,
+          },
+        });
+
+        if (!response.ok) {
+          throw new Error("Failed to fetch facility");
+        }
+        const data = await response.json();
+        return data.name || "Unknown Facility"; // Assuming the facility object has a 'name' field
+      } catch (error) {
+        console.error("Error fetching facility name:", error);
+        return "Unknown Facility";
+      }
+    }
+
     async function processAndSetDates() {
       const fetchedDates = await fetchDates();
 
       // Process dates and times into grouped ranges
-      const processDates = (dates) => {
-        // Ensure dates are sorted chronologically
-        const sortedDates = dates.sort((a, b) => {
+      const processDates = async (dates) => {
+        // Fetch facility names for all dates
+        const facilityPromises = dates.map(async (entry) => ({
+          ...entry,
+          facilityName: await fetchFacilityName(entry.facility),
+        }));
+        const datesWithFacilities = await Promise.all(facilityPromises);
+
+        // Sort dates chronologically
+        const sortedDates = datesWithFacilities.sort((a, b) => {
           const dateA = new Date(`${a.date}T${a.start_time}`);
           const dateB = new Date(`${b.date}T${b.start_time}`);
           return dateA - dateB;
@@ -53,12 +81,11 @@ const OccupiedDatesDisplay = () => {
         let currentRange = null;
 
         sortedDates.forEach((entry) => {
-          const { date: dateStr, start_time, end_time } = entry;
-          // Parse the date and time
+          const { date: dateStr, start_time, end_time, facilityName } = entry;
           const dateTime = new Date(`${dateStr}T${start_time}`);
           if (isNaN(dateTime.getTime())) {
             console.error("Invalid date or time:", dateStr, start_time);
-            return; // Skip invalid entries
+            return;
           }
 
           const month = dateTime.toLocaleString("en-US", {
@@ -67,7 +94,6 @@ const OccupiedDatesDisplay = () => {
           });
 
           if (month !== currentMonth) {
-            // If month changes, finalize the previous range
             if (currentRange) {
               if (!ranges[currentMonth]) ranges[currentMonth] = [];
               ranges[currentMonth].push(currentRange);
@@ -78,22 +104,21 @@ const OccupiedDatesDisplay = () => {
               startTime: start_time,
               endDate: dateStr,
               endTime: end_time,
+              facilityName, // Include facility name
             };
           } else {
-            // Check if the date is consecutive
             const prevDate = new Date(`${currentRange.endDate}T${currentRange.endTime}`);
-            prevDate.setDate(prevDate.getDate() + 1); // Add 1 day to check continuity
+            prevDate.setDate(prevDate.getDate() + 1);
 
             const currentDate = new Date(`${dateStr}T${start_time}`);
             if (
               currentDate.toISOString().split("T")[0] ===
-              prevDate.toISOString().split("T")[0]
+              prevDate.toISOString().split("T")[0] &&
+              currentRange.facilityName === facilityName // Ensure same facility
             ) {
-              // Extend the current range
               currentRange.endDate = dateStr;
               currentRange.endTime = end_time;
             } else {
-              // Finalize the current range and start a new one
               if (!ranges[currentMonth]) ranges[currentMonth] = [];
               ranges[currentMonth].push(currentRange);
               currentRange = {
@@ -101,12 +126,12 @@ const OccupiedDatesDisplay = () => {
                 startTime: start_time,
                 endDate: dateStr,
                 endTime: end_time,
+                facilityName,
               };
             }
           }
         });
 
-        // Finalize the last range
         if (currentRange) {
           if (!ranges[currentMonth]) ranges[currentMonth] = [];
           ranges[currentMonth].push(currentRange);
@@ -115,7 +140,8 @@ const OccupiedDatesDisplay = () => {
         return ranges;
       };
 
-      setGroupedDates(processDates(fetchedDates));
+      const processedRanges = await processDates(fetchedDates);
+      setGroupedDates(processedRanges);
     }
 
     processAndSetDates();
@@ -129,6 +155,7 @@ const OccupiedDatesDisplay = () => {
           <div className="date-cards">
             {groupedDates[month].map((range, index) => (
               <div key={index} className="date-card">
+                <p className="facility-name">{range.facilityName}</p>
                 <p className="date-range">
                   {new Date(`${range.startDate}T${range.startTime}`).toLocaleString("en-US", {
                     day: "numeric",
@@ -138,9 +165,6 @@ const OccupiedDatesDisplay = () => {
                     minute: "2-digit",
                   })} -{" "}
                   {new Date(`${range.endDate}T${range.endTime}`).toLocaleString("en-US", {
-                    day: "numeric",
-                    month: "short",
-                    year: "numeric",
                     hour: "2-digit",
                     minute: "2-digit",
                   })}
